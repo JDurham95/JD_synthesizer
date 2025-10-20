@@ -112,7 +112,7 @@ tt_state = tk.BooleanVar(value=False)
 tt_frame= tk.Frame(main_window, borderwidth=0, bg="#333333")
 tt_frame.grid(row=23, column=0)
 
-tt_canvas = tk.Canvas(tt_frame, width=20, height=20, bg="#333333")
+tt_canvas = tk.Canvas(tt_frame, width=20, height=20, bg="#333333", highlightthickness=0)
 tt_canvas.pack(side=tk.LEFT)
 tt_canvas.bind("<Button-1>",
                lambda event: update_tt_state(event,tt_canvas,tt_state))
