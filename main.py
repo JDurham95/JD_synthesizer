@@ -4,6 +4,10 @@
 """
 Sources and references:
 
+Description: Referenced tutorial on TKinter grid and widget spacing
+Source URL: https://www.activestate.com/resources/quick-reads/how-to-position-widgets-in-tkinter/
+Date Accessed: 10/19/2025
+
 Description: Source of key numbers and frequencies for A0 - C8
 Source URL: https://en.wikipedia.org/wiki/Piano_key_frequencies#/media/File:Piano_key_frequencies.png
 Date Accessed: 10/19/2025
@@ -121,11 +125,5 @@ update_tt_color(tt_canvas,tt_state)
 
 tt_title = tk.Label(main_window, text="Toggle Tooltips", bg="#333333", fg="#1539EE", font=("inter", 12, "bold"))
 tt_title.grid(row=24, column=0)
-
-
-
-
-
-
 
 main_window.mainloop()
