@@ -4,6 +4,10 @@
 """
 Sources and references:
 
+Description: Referenced for creating tool tips in the tkinter UI
+Source URL: https://pypi.org/project/TkToolTip/
+Date Accessed: 10/20/2025
+
 Description: Referenced for help with Tkinter sticky attribute
 Source URL: https://www.tutorialspoint.com/python/tk_grid.htm
 Date Accessed: 10/19/2025
@@ -50,6 +54,6 @@ ui = create_ui()
 # create Sine wave image
 sine_wave_img = PhotoImage(file=r"images/sine_wave.png")
 sine_wave_label = tk.Label(ui, image=sine_wave_img,highlightthickness=0, bg="#333333")
-sine_wave_label.grid(row=15, column=2,)
+sine_wave_label.grid(row=13, column=0,)
 
 ui.mainloop()
