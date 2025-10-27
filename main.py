@@ -1,8 +1,27 @@
 #Jacob Durham
 #CS 361 Software Engineering I Fall 2025
 
+from sine_osc import SineOscillator
+from wav_to_file import wav_to_file
+import itertools
+import winsound
+from wave_adder import WaveAdder
+
+
 """
 Sources and references:
+
+Description: Referenced for help with winsound
+Source URL:https://docs.python.org/3/library/winsound.html
+Date Accessed: 10/26/2025
+
+Description: Referenced for help with Abstract Base Classes
+Source URL:https://www.geeksforgeeks.org/python/abstract-classes-in-python/
+Date Accessed: 10/26/2025
+
+Description: Code for creating the sine oscillator adapted from
+Source URL:https://python.plainenglish.io/making-a-synth-with-python-oscillators-2cb8e68e9c3b
+Date Accessed: 10/26/2025
 
 Description: Referenced for creating tool tips in the tkinter UI
 Source URL: https://pypi.org/project/TkToolTip/
@@ -49,11 +68,18 @@ import tkinter as tk
 from tkinter import PhotoImage
 from UI import create_ui
 
-ui = create_ui()
+# ui = create_ui()
+#
+# # create Sine wave image
+# sine_wave_img = PhotoImage(file=r"images/sine_wave.png")
+# sine_wave_label = tk.Label(ui, image=sine_wave_img,highlightthickness=0, bg="#333333")
+# sine_wave_label.grid(row=13, column=0,)
+#
+# ui.mainloop()
 
-# create Sine wave image
-sine_wave_img = PhotoImage(file=r"images/sine_wave.png")
-sine_wave_label = tk.Label(ui, image=sine_wave_img,highlightthickness=0, bg="#333333")
-sine_wave_label.grid(row=13, column=0,)
+gen = SineOscillator(frequency=440)
+iter(gen)
+wav = [next(gen) for _ in range (44100 * 4)]
+wav_to_file(wav)
 
-ui.mainloop()
+winsound.PlaySound("temp.wav", winsound.SND_FILENAME)
