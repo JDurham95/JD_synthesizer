@@ -3,8 +3,17 @@ from tktooltip import ToolTip
 import re
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
-sine_label_coords=[0,14]
+sine_text_label_coords=[0,14]
 sine_button_coords=[0,15]
+
+triangle_text_label_coords=[1,14]
+triangle_button_coords=[1,15]
+
+square_text_label_coords=[2,14]
+square_button_coords=[2,15]
+
+sawtooth_text_label_coords=[3,14]
+sawtooth_button_coords=[3,15]
 
 key_text_box_coords = [0,18]
 key_label_coords = [0,19]
@@ -21,6 +30,11 @@ tt_label_coords =[0,24]
 play_button_coords =[10,23]
 
 dict_of_tooltips = {}
+dict_of_oscillator_buttons= {}
+array_oscillator_button_names = ["sw_button",
+                                 "tw_button",
+                                 "sq_button",
+                                 "saw_button"]
 
 
 def update_toggle_color(canvas,button_state):
@@ -39,9 +53,9 @@ def update_toggle_color(canvas,button_state):
 
     canvas.create_oval(coordinates, fill=fill_color, outline="white", )
 
-def update_toggle_state(root, event, canvas,button_state):
+def update_toggle_state(root,canvas,button_state, osc_update = True):
     """
-    Method used for changing the state of the tool tips toggle between True and False. Calls
+    Method used for changing the state of the buttons between True and False. Calls
     the update_tt_color function
     """
     is_on = button_state.get()
@@ -52,9 +66,12 @@ def update_toggle_state(root, event, canvas,button_state):
         button_state.set(True)
 
     update_toggle_color(canvas,button_state)
+
     if canvas.winfo_name() == "tt_button":
         toggle_tool_tips(root, button_state)
 
+    if canvas.winfo_name() in array_oscillator_button_names and osc_update:
+        update_wave_selection(root, canvas)
 
 def toggle_tool_tips(root, event_status):
     """Toggles the tool tips on and off"""
@@ -64,6 +81,19 @@ def toggle_tool_tips(root, event_status):
             tooltip.delay = 0
         else:
             tooltip.delay = 99999
+
+def update_wave_selection(root, canvas):
+    """Toggles the old oscillator off when a new one is selected"""
+    for name, oscillator_button_group in dict_of_oscillator_buttons.items():
+        cur_state = oscillator_button_group["state"].get()
+        if not oscillator_button_group["button"] == canvas and cur_state:
+            state = oscillator_button_group["state"]
+            cur_canvas = oscillator_button_group["button"]
+            update_toggle_state(root, cur_canvas, state, False)
+            break
+
+
+
 
 
 def create_ui():
@@ -139,12 +169,91 @@ def create_ui():
     sw_canvas.bind("<Button-1>",
                    lambda event: update_toggle_state(event, sw_canvas,sw_state))
 
-    update_toggle_color(sw_canvas,sw_state)
+    update_toggle_color(sw_canvas, sw_state)
 
-    #create SINE wave label
-    sw_label = tk.Label(main_window, text="SINE", fg="#1539EE", bg="#333333",
-                        font=("inter", 12, "bold"), name="sw_label")
-    sw_label.grid(row=sine_label_coords[1], column=sine_label_coords[0], sticky="n")
+    #add the sine wave state and canvas button to the dict of oscillator buttons
+    dict_of_oscillator_buttons["sine_wave_button_group"] = {}
+    dict_of_oscillator_buttons["sine_wave_button_group"]["button"] = sw_canvas
+    dict_of_oscillator_buttons["sine_wave_button_group"]["state"] = sw_state
+    dict_of_oscillator_buttons["sine_wave_button_group"]["name"] = "sine"
+
+    #create the triangle wave toggle button
+    tw_state = tk.BooleanVar(value=False)
+    print(tw_state.get())
+    tw_frame = tk.Frame(main_window, borderwidth=0, bg="#333333", name="tw_frame")
+    tw_frame.grid(row= triangle_button_coords[1], column=triangle_button_coords[0])
+
+    tw_canvas = tk.Canvas(tw_frame, width=20, height=20, highlightthickness=0, bg="#333333", name="tw_button")
+    tw_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(5,5))
+    tw_canvas.bind("<Button-1>",
+                   lambda event: update_toggle_state(event, tw_canvas,tw_state))
+
+    update_toggle_color(tw_canvas, tw_state)
+
+    #add the triangle wave state and canvas button to the dict of oscillator buttons
+    dict_of_oscillator_buttons["triangle_button_group"] = {}
+    dict_of_oscillator_buttons["triangle_button_group"]["button"] = tw_canvas
+    dict_of_oscillator_buttons["triangle_button_group"]["state"] = tw_state
+    dict_of_oscillator_buttons["triangle_button_group"]["name"] = "triangle"
+
+    #create the square wave toggle button
+    sqw_state = tk.BooleanVar(value=False)
+    sqw_frame = tk.Frame(main_window, borderwidth=0, bg="#333333", name="sqw_frame")
+    sqw_frame.grid(row=square_button_coords[1], column=square_button_coords[0])
+
+    sqw_canvas = tk.Canvas(sqw_frame, width=20, height=20, highlightthickness=0, bg="#333333", name="sq_button")
+    sqw_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(5,5))
+    sqw_canvas.bind("<Button-1>",
+                    lambda event: update_toggle_state(event, sqw_canvas,sqw_state))
+
+    update_toggle_color(sqw_canvas, sqw_state)
+
+    #add the square wave state and canvas button the dict of oscillator buttons
+    dict_of_oscillator_buttons["square_button_group"] = {}
+    dict_of_oscillator_buttons["square_button_group"]["button"] = sqw_canvas
+    dict_of_oscillator_buttons["square_button_group"]["state"] = sqw_state
+    dict_of_oscillator_buttons["square_button_group"]["name"] = "square"
+
+    #create the saw wave toggle button
+    saww_state = tk.BooleanVar(value=False)
+    saww_frame= tk.Frame(main_window, borderwidth=0, bg="#333333", name="saww_frame")
+    saww_frame.grid(row= sawtooth_button_coords[1], column=sawtooth_button_coords[0])
+
+    saww_canvas = tk.Canvas(saww_frame, width=20, height=20, highlightthickness=0, bg="#333333", name="saw_button")
+    saww_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(5,5))
+    saww_canvas.bind("<Button-1>",
+                     lambda event: update_toggle_state(event, saww_canvas,saww_state))
+
+    update_toggle_color(saww_canvas, saww_state)
+
+    #add the saw wave button group to the dict of oscillator buttons
+    dict_of_oscillator_buttons["sawtooth_button_group"] = {}
+    dict_of_oscillator_buttons["sawtooth_button_group"]["button"] = saww_canvas
+    dict_of_oscillator_buttons["sawtooth_button_group"]["state"] = saww_state
+    dict_of_oscillator_buttons["sawtooth_button_group"]["name"] = "saw"
+
+
+
+
+    #create SIN wave label
+    sw_label = tk.Label(main_window, text="SIN", fg="#1539EE", bg="#333333",
+                        font=("inter", 12, "bold"), name="sw_text_label")
+    sw_label.grid(row=sine_text_label_coords[1], column=sine_text_label_coords[0], sticky="n")
+
+    #create TRI wave label
+    tri_text_label = tk.Label(main_window, text="TRI", fg="#1539EE", bg="#333333",
+                        font=("inter", 12, "bold"), name="tri_text_label")
+    tri_text_label.grid(row=triangle_text_label_coords[1], column=triangle_text_label_coords[0], sticky="n")
+
+    #create SQR wave label
+    sqr_text_label = tk.Label(main_window, text="SQR", fg="#1539EE", bg="#333333",
+                        font=("inter", 12, "bold"), name="sqr_text_label")
+    sqr_text_label.grid(row=square_text_label_coords[1], column=square_text_label_coords[0], sticky="n")
+
+    #create SAW wave label
+    saw_text_label = tk.Label(main_window, text="SAW", fg="#1539EE", bg="#333333",
+                        font=("inter", 12, "bold"), name="saw_text_label")
+    saw_text_label.grid(row=sawtooth_text_label_coords[1], column=sawtooth_text_label_coords[0], sticky="n")
 
     #create the tool tips toggle button
     tt_state = tk.BooleanVar(value=True)

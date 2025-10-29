@@ -1,13 +1,6 @@
 #Jacob Durham
 #CS 361 Software Engineering I Fall 2025
 
-from sine_osc import SineOscillator
-from wav_to_file import wav_to_file
-import itertools
-import winsound
-from wave_adder import WaveAdder
-
-
 """
 Sources and references:
 
@@ -19,7 +12,8 @@ Description: Referenced for help with Abstract Base Classes
 Source URL:https://www.geeksforgeeks.org/python/abstract-classes-in-python/
 Date Accessed: 10/26/2025
 
-Description: Code for creating the sine oscillator adapted from
+Description: Code for creating Oscillator ABC, Sine Oscillator, Triangle Oscillator, Square Oscillator, 
+Saw Oscillator, and wave_adder, copied and adapted from
 Source URL:https://python.plainenglish.io/making-a-synth-with-python-oscillators-2cb8e68e9c3b
 Date Accessed: 10/26/2025
 
@@ -68,18 +62,41 @@ import tkinter as tk
 from tkinter import PhotoImage
 from UI import create_ui
 
-# ui = create_ui()
-#
-# # create Sine wave image
-# sine_wave_img = PhotoImage(file=r"images/sine_wave.png")
-# sine_wave_label = tk.Label(ui, image=sine_wave_img,highlightthickness=0, bg="#333333")
-# sine_wave_label.grid(row=13, column=0,)
-#
-# ui.mainloop()
+#coordinates for UI images. Element 0 is column, element 1 is row
+sine_img_coords = [0,13]
+tri_img_coords = [1,13]
+sqr_img_coords = [2,13]
+saw_img_coords = [3,13]
 
-gen = SineOscillator(frequency=440)
-iter(gen)
-wav = [next(gen) for _ in range (44100 * 4)]
-wav_to_file(wav)
+ui = create_ui()
 
-winsound.PlaySound("temp.wav", winsound.SND_FILENAME)
+# create Sine wave image
+sine_wave_img = PhotoImage(file=r"images/sine_wave.png")
+sine_img_label = tk.Label(ui, image=sine_wave_img,highlightthickness=0, bg="#333333")
+sine_img_label.grid(row=sine_img_coords[1], column=sine_img_coords[0])
+
+#create the triangle wave image
+tri_wave_img = PhotoImage(file=r"images/triangle_wave.png")
+tri_img_label = tk.Label(ui, image=tri_wave_img,highlightthickness=0, bg="#333333")
+tri_img_label.grid(row=tri_img_coords[1], column=tri_img_coords[0])
+
+#create the square wave image
+sqr_wave_img = PhotoImage(file=r"images/square_wave.png")
+sqr_img_label = tk.Label(ui, image=sqr_wave_img,highlightthickness=0, bg="#333333")
+sqr_img_label.grid(row=sqr_img_coords[1], column=sqr_img_coords[0])
+
+#create the saw wave image
+saw_wave_img = PhotoImage(file=r"images/saw_wave.png")
+saw_img_label = tk.Label(ui, image=saw_wave_img,highlightthickness=0, bg="#333333")
+saw_img_label.grid(row=saw_img_coords[1], column=saw_img_coords[0])
+
+
+
+ui.mainloop()
+
+# gen = SineOscillator(frequency=440)
+# iter(gen)
+# wav = [next(gen) for _ in range (44100 * 4)]
+# wav_to_file(wav)
+#
+# winsound.PlaySound("temp.wav", winsound.SND_FILENAME)
