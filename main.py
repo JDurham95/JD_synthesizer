@@ -4,6 +4,27 @@
 """
 Sources and references:
 
+Description: Referenced for help deleting from a Key field tkinter widget when putting in a new value
+Source URL: https://www.geeksforgeeks.org/python/how-to-clear-the-entry-widget-after-button-press-in-tkinter/
+Date Accessed: 10/29/2025
+
+Description: Referenced for help with getting a function to execute when the enter key is used
+while the text box is selected.
+Source URL: https://stackoverflow.com/questions/56702270/how-do-i-use-the-entry-widget-on-tkinter-to-execute-a-function-by-inputting-para
+Date Accessed: 10/29/2025
+
+Description: Referenced for help with moving files from one directory to another.
+Source URL: https://stackoverflow.com/questions/8858008/how-do-i-move-a-file-in-python
+Date Accessed: 10/29/2025
+
+Description: Additional help with tkinter button lambda events that happen when the button is clicked.
+Source URL: https://stackoverflow.com/questions/70406400/understanding-python-lambda-behavior-with-tkinter-button
+Date Accessed: 10/29/2025
+
+Description: Referenced for help with TKinter Entry widgets
+Source URL: https://www.geeksforgeeks.org/python/python-tkinter-entry-widget/
+Date Accessed: 10/29/2025
+
 Description: Referenced for help with Tkinter button attributes
 Source URL: https://www.tutorialspoint.com/python/tk_button.htm
 Date Accessed: 10/28/2025
@@ -94,13 +115,4 @@ saw_wave_img = PhotoImage(file=r"images/saw_wave.png")
 saw_img_label = tk.Label(ui, image=saw_wave_img,highlightthickness=0, bg="#333333")
 saw_img_label.grid(row=saw_img_coords[1], column=saw_img_coords[0])
 
-
-
 ui.mainloop()
-
-# gen = SineOscillator(frequency=440)
-# iter(gen)
-# wav = [next(gen) for _ in range (44100 * 4)]
-# wav_to_file(wav)
-#
-# winsound.PlaySound("temp.wav", winsound.SND_FILENAME)

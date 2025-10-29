@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 import itertools
 
 class Oscillator(ABC):
-    def __init__(self, frequency=440, phase=0,
-                 sample_rate=44100,
-                 amplitude=1, wave_range=(-1, 1)):
+    def __init__(self, frequency=440,
+                 amplitude=1, phase=0,
+                 sample_rate=44100, wave_range=(-1, 1)):
         self._frequency = frequency
         self._sample_rate = sample_rate
         self._amplitude = amplitude

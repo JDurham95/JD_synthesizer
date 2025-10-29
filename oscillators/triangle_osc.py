@@ -1,5 +1,5 @@
 import math
-from saw_osc import SawOscillator
+from oscillators.saw_osc import SawOscillator
 
 class TriangleOscillator(SawOscillator):
     """Defines the Triangle Oscillator subclass, inherits from the Saw Oscillator class """

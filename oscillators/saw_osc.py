@@ -1,7 +1,5 @@
 import math
-import itertools
-from abc import ABC, abstractmethod
-from oscillator_abc import Oscillator
+from oscillators.oscillator_abc import Oscillator
 
 
 class SawOscillator(Oscillator):
@@ -21,7 +19,7 @@ class SawOscillator(Oscillator):
     def __next__(self):
         div = (self._i + self._p) / self._period
         val = 2 * (div - math.floor(0.5 + div))
-        self._i += self._i + 1
+        self._i += 1
 
         if self._wave_range != (-1,1):
             val = self.squish_val(val, *self._wave_range)

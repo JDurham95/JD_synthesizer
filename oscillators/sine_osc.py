@@ -1,7 +1,5 @@
 import math
-import itertools
-from abc import ABC, abstractmethod
-from oscillator_abc import Oscillator
+from oscillators.oscillator_abc import Oscillator
 
 
 class SineOscillator(Oscillator):

@@ -1,0 +1,31 @@
+def freq_to_key(freq):
+    """
+    Takes an input frequency, converts it to a key and outputs it.
+    """
+    freq_dict = {'A#0': 29, 'A#1': 58, 'A#2': 116, 'A#3': 233, 'A#4': 466, 'A#5': 932, 'A#6': 1864, 'A#7': 3729,
+                 'A0': 28, 'A1': 54, 'A2': 110, 'A3': 220, 'A4': 440, 'A5': 880, 'A6': 1760, 'A7': 3520,
+                 'B0': 39, 'B1': 61, 'B2': 123, 'B3': 246, 'B4': 493, 'B5': 987, 'B6': 1975, 'B7': 3951,
+                 'C#1': 34, 'C#2': 69, 'C#3': 138, 'C#4': 277, 'C#5': 554, 'C#6': 1103, 'C#7': 2217,
+                 'C1': 32, 'C2': 65, 'C3': 130, 'C4': 261, 'C5': 523, 'C6': 1046, 'C7': 2093, 'C8': 4186,
+                 'D#1': 38, 'D#2': 77, 'D#3': 155, 'D#4': 311, 'D#5': 622, 'D#6': 1244, 'D#7': 2489,
+                 'D1': 36, 'D2': 73, 'D3': 146, 'D4': 293, 'D5': 587, 'D6': 1174, 'D7': 2349,
+                 'E1': 41, 'E2': 82, 'E3': 164, 'E4': 329, 'E5': 659, 'E6': 1318, 'E7': 2637,
+                 'F#1': 46, 'F#2': 92, 'F#3': 185, 'F#4': 369, 'F#5': 739, 'F#6': 1479, 'F#7': 2959,
+                 'F1': 43, 'F2': 87, 'F3': 174, 'F4': 349, 'F5': 698, 'F6': 1396, 'F7': 2793,
+                 'G#1': 51, 'G#2': 103, 'G#3': 207, 'G#4': 415, 'G#5': 830, 'G#6': 1661, 'G#7': 3322,
+                 'G1': 48, 'G2': 98, 'G3': 196, 'G4': 392, 'G5': 783, 'G6': 1567, 'G7': 3135}
+
+    smallest_difference = float("inf")
+    closest_key, closest_freq = None, None
+
+    for key, value in freq_dict.items():
+
+        curr_diff = abs(freq - value)
+
+        if curr_diff < smallest_difference:
+            closest_key = key
+            closest_freq = value
+            smallest_difference = curr_diff
+
+    return closest_key, closest_freq
+

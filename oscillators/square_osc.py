@@ -1,5 +1,5 @@
 import math
-from sine_osc import SineOscillator
+from oscillators.sine_osc import SineOscillator
 
 
 class SquareOscillator(SineOscillator):
