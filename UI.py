@@ -27,7 +27,11 @@ tkm_label_coords =[0,22]
 tt_button_coords =[0,23]
 tt_label_coords =[0,24]
 
-play_button_coords =[10,23]
+play_button_coords =[6,23]
+ready_button_coords =[5,23]
+sound_ready_label_coords = [4,23]
+sound_ready_oval_coords = [4,22]
+
 
 dict_of_tooltips = {}
 dict_of_oscillator_buttons= {}
@@ -147,7 +151,14 @@ def create_ui():
                                      font=("inter", 12, "bold"), name="freq_field_label")
     frequency_field_label.grid(row=freq_label_coords[1], column=freq_label_coords[0], sticky="n")
 
-    #create
+    #create the ready button frame and button widget
+    ready_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name= "ready_frame")
+    ready_frame.grid(row = ready_button_coords[1], column = ready_button_coords[0])
+
+    ready_button = tk.Button(ready_frame, text="Ready", font=("inter", 16, "bold"), fg="#1539EE",
+                             bg="#333333", relief="flat", name="ready_button",
+                             activebackground="#333333", activeforeground="#1539EE")
+    ready_button.grid(row = ready_button_coords[1], column = ready_button_coords[0])
 
     #create the blue frame for the play button
     play_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name="play_frame")
@@ -155,7 +166,8 @@ def create_ui():
 
     #create the play button widget
     play_button = tk.Button(play_frame, text= "Play", font= ("inter", 16, "bold"),
-                            fg="#1539EE", bg="#333333", relief="flat", name="play_button")
+                            fg="#1539EE", bg="#333333", relief="flat", name="play_button",
+                            activebackground= "#333333", activeforeground="#1539EE")
     play_button.grid(row=play_button_coords[1], column=play_button_coords[0])
 
     #create the sine wave toggle button
@@ -179,7 +191,6 @@ def create_ui():
 
     #create the triangle wave toggle button
     tw_state = tk.BooleanVar(value=False)
-    print(tw_state.get())
     tw_frame = tk.Frame(main_window, borderwidth=0, bg="#333333", name="tw_frame")
     tw_frame.grid(row= triangle_button_coords[1], column=triangle_button_coords[0])
 
@@ -265,7 +276,7 @@ def create_ui():
                           name="tt_button")
     tt_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(0,2))
     tt_canvas.bind("<Button-1>",
-                   lambda event: update_toggle_state(main_window,event,tt_canvas,tt_state))
+                   lambda event: update_toggle_state(main_window,tt_canvas,tt_state))
 
     update_toggle_color(tt_canvas,tt_state)
 
@@ -283,13 +294,26 @@ def create_ui():
                             name="tkm_button")
     tkm_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(0,2))
     tkm_canvas.bind("<Button-1>",
-                    lambda event: update_toggle_state(main_window, event,tkm_canvas,tkm_state))
+                    lambda event: update_toggle_state(main_window,tkm_canvas,tkm_state))
 
     update_toggle_color(tkm_canvas,tkm_state)
 
     tkm_title = tk.Label(main_window, text= "Toggle Key Matching", bg="#333333", fg="#1539EE",
                          font=("inter", 8, "bold"), name="tkm_title")
     tkm_title.grid(row=tkm_label_coords[1], column=tkm_label_coords[0], sticky="n")
+
+    #create the sound ready label and oval
+    sound_ready_title = tk.Label(main_window, text="Sound Ready", bg="#333333", fg="#1539EE",
+                                 font=("inter", 8, "bold"), name="sound_ready_title")
+    sound_ready_title.grid(row=sound_ready_label_coords[1], column=sound_ready_label_coords[0])
+
+    sound_ready_frame = tk.Frame(main_window, borderwidth=0, bg="#333333", name = "sound_ready_frame")
+    sound_ready_frame.grid(row = sound_ready_oval_coords[1], column = sound_ready_oval_coords[0], sticky = "s",
+                           pady=(0,2))
+    sound_ready_canvas = tk.Canvas(sound_ready_frame, width=20, height=20, bg="#333333", highlightthickness=0,
+                                   name="sound_ready_oval")
+    sound_ready_canvas.pack(side=tk.LEFT, padx=(5,5), pady=(0,2))
+    sound_ready_canvas.create_oval((5,5,15,15), fill= "white", outline= "white")
 
     return main_window
 

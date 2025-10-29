@@ -4,6 +4,10 @@
 """
 Sources and references:
 
+Description: Referenced for help with Tkinter button attributes
+Source URL: https://www.tutorialspoint.com/python/tk_button.htm
+Date Accessed: 10/28/2025
+
 Description: Referenced for help with winsound
 Source URL:https://docs.python.org/3/library/winsound.html
 Date Accessed: 10/26/2025
