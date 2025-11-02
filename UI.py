@@ -25,8 +25,11 @@ key_label_coords = [0,19]
 freq_text_box_coords =[1,18]
 freq_label_coords = [1,19]
 
-amp_text_box_coords = [18,13]
-amp_label_coords = [18,14]
+duration_text_box_coords = [2,18]
+duration_label_coords = [2,19]
+
+amp_text_box_coords = [3,18]
+amp_label_coords = [3,19]
 
 tkm_button_coords =[0,21]
 tkm_label_coords =[0,22]
@@ -38,6 +41,8 @@ play_button_coords =[6,23]
 ready_button_coords =[5,23]
 sound_ready_label_coords = [4,23]
 sound_ready_oval_coords = [4,22]
+
+reset_button_coords = [1,23]
 
 
 dict_of_tooltips = {}
@@ -67,9 +72,6 @@ def amplitude_enter_function(event = None):
     field_obj.insert(0, str(amp_val))
 
     field_obj.master.focus_set()
-
-
-
 
 def key_enter_function(event = None):
     """happens when the return key is pressed after a new key has been entered. """
@@ -125,6 +127,27 @@ def frequency_enter_function(event = None):
         field_obj.insert(0,str(freq_val))
         key_field.delete(0,tk.END)
         key_field.insert(0,"N/a")
+
+    field_obj.master.focus_set()
+
+def duration_enter_function(event = None):
+    field_obj = dict_of_fields["dur_field"]
+    dur_val = field_obj.get()
+
+    if not dur_val.isdigit():
+        dur_val = "2"
+
+    dur_val = int(dur_val)
+
+    if dur_val < 1:
+        field_obj.delete(0,tk.END)
+        field_obj.insert(0,"1")
+    elif dur_val > 10:
+        field_obj.delete(0,tk.END)
+        field_obj.insert(0,"10")
+    else:
+        field_obj.delete(0,tk.END)
+        field_obj.insert(0,str(dur_val))
 
     field_obj.master.focus_set()
 
@@ -193,8 +216,31 @@ def update_wave_selection(root, canvas):
             break
 
 
+def reset(root,event =None):
+    """Resets the synth to the default parameters"""
+
+    update_toggle_state(root,dict_of_oscillator_buttons["sine_wave_button_group"]["button"],
+                        dict_of_oscillator_buttons["sine_wave_button_group"]["state"])
 
 
+    field_obj = dict_of_fields["amp_field"]
+    amp_val = "100"
+    field_obj.delete(0,tk.END)
+    field_obj.insert(0,amp_val)
+
+    field_obj = dict_of_fields["dur_field"]
+    dur_val = "2"
+    field_obj.delete(0,tk.END)
+    field_obj.insert(0,dur_val)
+
+    field_obj = dict_of_fields["key_field"]
+    key_val = "C4"
+    field_obj.delete(0,tk.END)
+    field_obj.insert(0,key_val)
+
+    field_obj.master.focus_set()
+
+    key_enter_function(None)
 
 def create_ui():
     #Establish the main synth window
@@ -279,9 +325,31 @@ def create_ui():
     dict_of_tooltips["amp_field_tt"] = ToolTip(amp_field, msg="Enter a amplitude value here (0 - 100). Type a new value "
                                                               "and then use the return key. A value of "
                                                               "0 will not produce a sound.", delay=2)
-    dict_of_tooltips["amp_field_tt"] = ToolTip(amp_field_label, msg="Enter a amplitude value here (0 - 100). Type a new "
+    dict_of_tooltips["amp_label_tt"] = ToolTip(amp_field_label, msg="Enter a amplitude value here (0 - 100). Type a new "
                                                                     "value and then use the return key. A value of "
                                                               "0 will not produce a sound.", delay=2)
+
+    #create the duration text entry label
+    dur_field_label = tk.Label(main_window, text="Duration\n(s)", bg="#333333",fg="#1539EE",
+                               font=("inter", 12, "bold"), name="dur_field_label")
+    dur_field_label.grid(row=duration_label_coords[1], column=duration_label_coords[0], sticky="n")
+
+    #create the duration text entry
+    dur_field = tk.Entry(main_window, width=8, justify="center", name="dur_field",
+                         font=("inter", 10, "bold"))
+    dur_field.grid(row=duration_text_box_coords[1], column = duration_text_box_coords[0], sticky="n")
+    dur_field.insert(0, "2")
+    dur_field.bind("<Return>", lambda event: duration_enter_function(event))
+
+    dict_of_fields["dur_field"] = dur_field
+
+    #create the tool tips for the duration widgets
+    dict_of_tooltips["dur_field_tt"] = ToolTip(dur_field, msg="Enter a duration value here (1 - 10 seconds). Values "
+                                                              "outside of that range are not allowed.", delay=2)
+    dict_of_tooltips["dur_label_tt"] = ToolTip(dur_field_label, msg="Enter a duration value here (1 - 10 seconds). Values "
+                                                              "outside of that range are not allowed.", delay=2)
+
+
     #create the sine wave toggle button
     sw_state = tk.BooleanVar(value=True)
 
@@ -460,7 +528,7 @@ def create_ui():
     play_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name="play_frame")
     play_frame.grid(row=play_button_coords[1], column=play_button_coords[0])
 
-    play_function = lambda :play_sound(freq_field.get(),amp_field.get(),get_active_osc())
+    play_function = lambda :play_sound(freq_field.get(),amp_field.get(),get_active_osc(), dur_field.get())
 
     #create the play button widget
     play_button = tk.Button(play_frame, text= "Play", font= ("inter", 16, "bold"),
@@ -474,6 +542,24 @@ def create_ui():
                                               delay=2)
     dict_of_tooltips["play_frame"] = ToolTip(play_frame, msg="Click here to play the sound with the current settings.",
                                              delay=2)
+
+    #create the reset button widget.
+    reset_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name="reset_frame")
+    reset_frame.grid(row=reset_button_coords[1], column=reset_button_coords[0])
+
+    reset_function = lambda :reset(main_window)
+    reset_button = tk.Button(reset_frame, text= "Reset", font= ("inter", 16, "bold"),
+                             fg="#1539EE", bg="#333333", relief="flat", name="reset_button",
+                             activebackground= "#333333", activeforeground="#1539EE",
+                             command=reset_function)
+    reset_button.grid(row=reset_button_coords[1], column=reset_button_coords[0])
+
+
+    #create the tool tips for the reset button and frame
+    dict_of_tooltips["reset_button"] = ToolTip(reset_button, msg="Click here to reset synthesizer to default settings. "
+                                                                 "Warning! Resetting cannot be undone!", delay=2)
+    dict_of_tooltips["reset_frame"] = ToolTip(reset_frame, msg="Click here to reset synthesizer to default settings."
+                                                               "Warning! Resetting cannot be undone!", delay=2)
 
     return main_window
 

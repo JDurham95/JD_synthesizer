@@ -8,7 +8,7 @@ import os
 
 
 
-def ready_sound(frequency, amplitude, osc_name):
+def ready_sound(frequency, amplitude, osc_name, duration):
     """readies a sound for playing"""
 
     frequency = int(frequency)
@@ -17,25 +17,25 @@ def ready_sound(frequency, amplitude, osc_name):
     if osc_name == "sine":
         generator = SineOscillator(frequency, amplitude)
         iter(generator)
-        wav = [next(generator) for _ in range(44100 * 4)]
+        wav = [next(generator) for _ in range(44100 * int(duration))]
         wav_to_file(wav)
 
     if osc_name == "triangle":
         generator = TriangleOscillator(frequency, amplitude)
         iter(generator)
-        wav = [next(generator) for _ in range(44100 * 4)]
+        wav = [next(generator) for _ in range(44100 * int(duration))]
         wav_to_file(wav)
 
     if osc_name == "saw":
         generator = SawOscillator(frequency, amplitude)
         iter(generator)
-        wav = [next(generator) for _ in range(44100 * 4)]
+        wav = [next(generator) for _ in range(44100 * int(duration))]
         wav_to_file(wav)
 
     if osc_name == "square":
         generator = SquareOscillator(frequency, amplitude)
         iter(generator)
-        wav = [next(generator) for _ in range(44100 * 4)]
+        wav = [next(generator) for _ in range(44100 * int(duration))]
         wav_to_file(wav)
 
     if os.path.exists("sounds/temp.wav"):
