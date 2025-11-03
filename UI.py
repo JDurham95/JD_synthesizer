@@ -4,6 +4,7 @@ from sound_methods.ready_sound import ready_sound
 from sound_methods.key_to_freq import key_to_freq
 from sound_methods.freq_to_key import freq_to_key
 from sound_methods.play_sound import play_sound
+from sound_methods.ready_sound import ready_sound
 import re
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
@@ -221,6 +222,9 @@ def reset(root,event =None):
 
     update_toggle_state(root,dict_of_oscillator_buttons["sine_wave_button_group"]["button"],
                         dict_of_oscillator_buttons["sine_wave_button_group"]["state"])
+    state = dict_of_oscillator_buttons["sine_wave_button_group"]["state"]
+    state.set(True)
+    update_toggle_color(dict_of_oscillator_buttons["sine_wave_button_group"]["button"],dict_of_oscillator_buttons["sine_wave_button_group"]["state"])
 
 
     field_obj = dict_of_fields["amp_field"]
@@ -241,6 +245,8 @@ def reset(root,event =None):
     field_obj.master.focus_set()
 
     key_enter_function(None)
+
+    ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(), dict_of_fields["dur_field"].get())
 
 def create_ui():
     #Establish the main synth window

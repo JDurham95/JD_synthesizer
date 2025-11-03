@@ -41,5 +41,6 @@ def ready_sound(frequency, amplitude, osc_name, duration):
     if os.path.exists("sounds/temp.wav"):
         os.remove("sounds/temp.wav")
 
-    os.rename("temp.wav", "sounds/temp.wav")
+    if os.path.exists("temp.wav"):
+        os.rename("temp.wav", "sounds/temp.wav")
 
