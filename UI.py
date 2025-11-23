@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tktooltip import ToolTip
 from sound_methods.ready_sound import ready_sound
@@ -6,6 +7,7 @@ from sound_methods.freq_to_key import freq_to_key
 from sound_methods.play_sound import play_sound
 from sound_methods.ready_sound import ready_sound
 import re
+import time
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
 sine_text_label_coords=[0,14]
@@ -54,6 +56,36 @@ array_oscillator_button_names = ["sw_button",
                                  "saw_button"]
 dict_of_fields= {}
 dict_of_settings_buttons= {}
+
+ui_color = "#1539EE"
+
+def update_ui_color(new_color):
+    color_service_file = "microservices\color_name_hexadecimal_converter\service-file.txt"
+
+    with open(color_service_file,"w") as f:
+        f.write(new_color)
+
+    time.sleep(7)
+
+    color_hex = None
+
+    with open(color_service_file,"r") as f:
+        color_hex = f.read()
+
+    open(color_service_file, "w").close()
+
+    ui_color = color_hex
+
+
+    for oscillator_button in dict_of_oscillator_buttons.values():
+        state = oscillator_button["state"].get()
+        if state:
+            oscillator_button["button"].configure(fg = color_hex)
+
+
+
+
+
 
 
 def amplitude_enter_function(event = None):
@@ -171,7 +203,7 @@ def update_toggle_color(canvas,button_state):
                    center + button_radius, center + button_radius)
 
     if is_on:
-        fill_color = "#1539EE"
+        fill_color = ui_color
     else:
         fill_color = "white"
 
@@ -281,7 +313,7 @@ def create_ui():
     dict_of_fields["key_field"] = key_field
 
     #create the UI title for the key text entry
-    key_field_label = tk.Label(main_window, text="Key", bg="#333333",fg="#1539EE",
+    key_field_label = tk.Label(main_window, text="Key", bg="#333333",fg=ui_color,
                                font=("inter", 12, "bold"), name="key_field_label")
     key_field_label.grid(row=key_label_coords[1], column=key_label_coords[0], sticky="n")
 
@@ -301,7 +333,7 @@ def create_ui():
     dict_of_fields["freq_field"] = freq_field
 
     #create label for frequency text entry
-    frequency_field_label = tk.Label(main_window, text = "Frequency\n(Hz)", bg="#333333",fg="#1539EE",
+    frequency_field_label = tk.Label(main_window, text = "Frequency\n(Hz)", bg="#333333",fg=ui_color,
                                      font=("inter", 12, "bold"), name="freq_field_label")
     frequency_field_label.grid(row=freq_label_coords[1], column=freq_label_coords[0], sticky="n")
 
@@ -314,7 +346,7 @@ def create_ui():
                                                                 "of the normal range may not produce a sound.", delay=2)
 
     #create the amplitude text entry label
-    amp_field_label = tk.Label(main_window, text="Amplitude", bg="#333333",fg="#1539EE",
+    amp_field_label = tk.Label(main_window, text="Amplitude", bg="#333333",fg=ui_color,
                                font=("inter", 12, "bold"), name="amp_field_label")
     amp_field_label.grid(row=amp_label_coords[1], column=amp_label_coords[0], sticky="n")
 
@@ -336,7 +368,7 @@ def create_ui():
                                                               "0 will not produce a sound.", delay=2)
 
     #create the duration text entry label
-    dur_field_label = tk.Label(main_window, text="Duration\n(s)", bg="#333333",fg="#1539EE",
+    dur_field_label = tk.Label(main_window, text="Duration\n(s)", bg="#333333",fg=ui_color,
                                font=("inter", 12, "bold"), name="dur_field_label")
     dur_field_label.grid(row=duration_label_coords[1], column=duration_label_coords[0], sticky="n")
 
@@ -450,22 +482,22 @@ def create_ui():
 
 
     #create SIN wave label
-    sw_label = tk.Label(main_window, text="SIN", fg="#1539EE", bg="#333333",
+    sw_label = tk.Label(main_window, text="SIN", fg=ui_color, bg="#333333",
                         font=("inter", 12, "bold"), name="sw_text_label")
     sw_label.grid(row=sine_text_label_coords[1], column=sine_text_label_coords[0], sticky="n")
 
     #create TRI wave label
-    tri_text_label = tk.Label(main_window, text="TRI", fg="#1539EE", bg="#333333",
+    tri_text_label = tk.Label(main_window, text="TRI", fg=ui_color, bg="#333333",
                         font=("inter", 12, "bold"), name="tri_text_label")
     tri_text_label.grid(row=triangle_text_label_coords[1], column=triangle_text_label_coords[0], sticky="n")
 
     #create SQR wave label
-    sqr_text_label = tk.Label(main_window, text="SQR", fg="#1539EE", bg="#333333",
+    sqr_text_label = tk.Label(main_window, text="SQR", fg=ui_color, bg="#333333",
                         font=("inter", 12, "bold"), name="sqr_text_label")
     sqr_text_label.grid(row=square_text_label_coords[1], column=square_text_label_coords[0], sticky="n")
 
     #create SAW wave label
-    saw_text_label = tk.Label(main_window, text="SAW", fg="#1539EE", bg="#333333",
+    saw_text_label = tk.Label(main_window, text="SAW", fg=ui_color, bg="#333333",
                         font=("inter", 12, "bold"), name="saw_text_label")
     saw_text_label.grid(row=sawtooth_text_label_coords[1], column=sawtooth_text_label_coords[0], sticky="n")
 
@@ -483,9 +515,13 @@ def create_ui():
 
     update_toggle_color(tt_canvas,tt_state)
 
-    tt_title = tk.Label(main_window, text="Toggle Tooltips", bg="#333333", fg="#1539EE",
+    tt_title = tk.Label(main_window, text="Toggle Tooltips", bg="#333333", fg=ui_color,
                         font=("inter", 8, "bold"), name="tt_title")
     tt_title.grid(row=tt_label_coords[1], column=tt_label_coords[0], sticky="n")
+
+    #create the tool tips for the toggle tool tips widgets
+    dict_of_tooltips["tt_canvas"] = ToolTip(tt_canvas, msg="Toggle Tooltips on or off", delay=2)
+    dict_of_tooltips["tt_label"] = ToolTip(tt_title, msg="Toggle Tooltips on or off", delay=2)
 
     #create the toggle key matching button
     tkm_state = tk.BooleanVar(value=True)
@@ -502,9 +538,21 @@ def create_ui():
 
     update_toggle_color(tkm_canvas,tkm_state)
 
-    tkm_title = tk.Label(main_window, text= "Toggle Key Matching", bg="#333333", fg="#1539EE",
+    tkm_title = tk.Label(main_window, text= "Toggle Key Matching", bg="#333333", fg=ui_color,
                          font=("inter", 8, "bold"), name="tkm_title")
     tkm_title.grid(row=tkm_label_coords[1], column=tkm_label_coords[0], sticky="n")
+
+    #creat the tool tips for toggle key matching
+    dict_of_tooltips["tkm_canvas"] = ToolTip(tkm_canvas, msg = "Toggle Key Matching. Key matching rounds the input "
+                                                               "frequency to the nearest key. Turning is off will allow "
+                                                               "the user to input frequencies that are between keys. "
+                                                               "Warning! Using frequencies outside of the standard "
+                                                               "range may not produce a sound!", delay=2)
+    dict_of_tooltips["tkm_label"] = ToolTip(tkm_title, msg = "Toggle Key Matching. Key matching rounds the input "
+                                                               "frequency to the nearest key. Turning is off will allow "
+                                                               "the user to input frequencies that are between keys. "
+                                                               "Warning! Using frequencies outside of the standard "
+                                                               "range may not produce a sound!", delay= 2)
 
     # #create the sound ready label and oval
     # sound_ready_title = tk.Label(main_window, text="Sound Ready", bg="#333333", fg="#1539EE",
@@ -531,15 +579,15 @@ def create_ui():
     # ready_button.grid(row = ready_button_coords[1], column = ready_button_coords[0])
 
     #create the blue frame for the play button
-    play_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name="play_frame")
+    play_frame = tk.Frame(main_window, borderwidth=3, bg=ui_color, name="play_frame")
     play_frame.grid(row=play_button_coords[1], column=play_button_coords[0])
 
     play_function = lambda :play_sound(freq_field.get(),amp_field.get(),get_active_osc(), dur_field.get())
 
     #create the play button widget
     play_button = tk.Button(play_frame, text= "Play", font= ("inter", 16, "bold"),
-                            fg="#1539EE", bg="#333333", relief="flat", name="play_button",
-                            activebackground= "#333333", activeforeground="#1539EE",
+                            fg=ui_color, bg="#333333", relief="flat", name="play_button",
+                            activebackground= "#333333", activeforeground=ui_color,
                             command=play_function)
     play_button.grid(row=play_button_coords[1], column=play_button_coords[0])
 
@@ -550,13 +598,13 @@ def create_ui():
                                              delay=2)
 
     #create the reset button widget.
-    reset_frame = tk.Frame(main_window, borderwidth=3, bg="#1539EE", name="reset_frame")
+    reset_frame = tk.Frame(main_window, borderwidth=3, bg=ui_color, name="reset_frame")
     reset_frame.grid(row=reset_button_coords[1], column=reset_button_coords[0])
 
     reset_function = lambda :reset(main_window)
     reset_button = tk.Button(reset_frame, text= "Reset", font= ("inter", 16, "bold"),
-                             fg="#1539EE", bg="#333333", relief="flat", name="reset_button",
-                             activebackground= "#333333", activeforeground="#1539EE",
+                             fg=ui_color, bg="#333333", relief="flat", name="reset_button",
+                             activebackground= "#333333", activeforeground=ui_color,
                              command=reset_function)
     reset_button.grid(row=reset_button_coords[1], column=reset_button_coords[0])
 
@@ -567,5 +615,9 @@ def create_ui():
     dict_of_tooltips["reset_frame"] = ToolTip(reset_frame, msg="Click here to reset synthesizer to default settings."
                                                                "Warning! Resetting cannot be undone!", delay=2)
 
+    print(dict_of_oscillator_buttons)
+    print(dict_of_settings_buttons)
+    print(dict_of_fields)
+    print(dict_of_tooltips)
     return main_window
 
