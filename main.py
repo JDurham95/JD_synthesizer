@@ -81,6 +81,10 @@ Date Accessed: 10/19/2025
 Description: Code for changing TKinter button colors after use
 Source URL: https://www.geeksforgeeks.org/python/change-color-of-button-in-python-tkinter/
 Date Accessed: 10/19/2025
+
+Description: Referenced for help with Tkinter drop down menus
+Source URL: https://www.geeksforgeeks.org/python/dropdown-menus-tkinter/
+Date Accessed: 11/23/2025
 """
 
 import tkinter as tk
