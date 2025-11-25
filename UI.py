@@ -1,9 +1,10 @@
 import os
+import sys
 import tkinter as tk
 from tkinter import OptionMenu, StringVar
 from tkinter import ttk
-from TkToolTip import ToolTip
-#from tktooltip import ToolTip
+# from TkToolTip import ToolTip
+from tktooltip import ToolTip
 from sound_methods.ready_sound import ready_sound
 from sound_methods.key_to_freq import key_to_freq
 from sound_methods.freq_to_key import freq_to_key
@@ -11,6 +12,7 @@ from sound_methods.play_sound import play_sound
 from sound_methods.ready_sound import ready_sound
 import re
 import time
+import subprocess
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
 sine_text_label_coords=[0,14]
@@ -273,6 +275,10 @@ def update_ui_color(new_color):
     with open(color_service_file,"w") as f:
         f.write(new_color)
 
+
+    #run the color converter script
+    subprocess.run([sys.executable, r"microservices\color_name_hexadecimal_converter\converter.py"])
+
     time.sleep(5)
 
     color_hex = None
@@ -295,7 +301,7 @@ def update_ui_color(new_color):
 
     #update the frame colors
     for frame in dict_of_frames.values():
-        frame.configure(fg = color_hex)
+        frame.configure(bg = color_hex)
 
     #update the button colors
     for button in dict_of_buttons.values():
@@ -314,8 +320,6 @@ def create_ui():
 
     for column in range(columns):
         main_window.columnconfigure(column, weight=1)
-
-
 
     main_window.rowconfigure(1, weight=1)
     main_window.rowconfigure(17, weight=1)
@@ -485,8 +489,7 @@ def create_ui():
     dict_of_oscillator_buttons["square_button_group"]["name"] = "square"
 
     #create tool tip for the square wave widget
-    # dict_of_tooltips["sqw_frame_tt"] = ToolTip(sqw_frame, msg="Select the square wave here. Only one wave be selected"
-    #                                                     " at a time.")
+
     dict_of_tooltips["sqw_canvas_tt"] = ToolTip(sqw_canvas, msg="Select the square wave here. Only one wave may be "
                                                                 "selected at a time.", delay=2)
     #create the saw wave toggle button
@@ -510,9 +513,6 @@ def create_ui():
     dict_of_oscillator_buttons["sawtooth_button_group"]["button"] = saww_canvas
     dict_of_oscillator_buttons["sawtooth_button_group"]["state"] = saww_state
     dict_of_oscillator_buttons["sawtooth_button_group"]["name"] = "saw"
-
-
-
 
     #create SIN wave label
     sw_label = tk.Label(main_window, text="SIN", fg=ui_color, bg="#333333",
@@ -672,7 +672,7 @@ def create_ui():
                             sticky= "n")
 
     #add the label to the dict of labels
-    dict_of_frames["color_select"] = color_select_label
+    dict_of_labels["color_select"] = color_select_label
 
     return main_window
 

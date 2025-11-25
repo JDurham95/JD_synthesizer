@@ -71,7 +71,7 @@ def get_content(filename):
 def main():
 
     #path for the service file
-    service_file = "service-file.txt"
+    service_file = r"microservices\color_name_hexadecimal_converter\service-file.txt"
 
     #create the service file if it does not exist
     if not os.path.exists(service_file):
@@ -91,6 +91,7 @@ def main():
 
             with open(service_file, 'w') as f:
                 f.write(color)
+                return
 
         time.sleep(1)
 
