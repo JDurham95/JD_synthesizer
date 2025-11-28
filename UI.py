@@ -55,6 +55,16 @@ reset_button_coords = [1,23]
 color_selection_coords = [23, 1]
 color_selection_label_coords = [23, 2]
 
+save_name_field_coords = [23,14]
+save_name_label_coords = [23,15]
+
+save_file_button_coords = [23,16]
+
+load_file_field_coords = [23,19]
+load_file_label_coords = [23,20]
+
+load_file_button_coords = [23,21]
+
 
 dict_of_tooltips = {}
 dict_of_oscillator_buttons= {}
@@ -69,6 +79,7 @@ dict_of_frames = {}
 dict_of_buttons = {}
 
 ui_color = "#1539EE"
+default_color = "#1539EE"
 
 colors = ["default", "red", "orange", "yellow", "green", "cyan", "blue", "magenta","purple", "lavender",
           "lilac", "pink", "white", "black", "gray", "silver", "maroon","brown", "beige", "tan", "peach",
@@ -279,7 +290,7 @@ def update_ui_color(new_color):
     #run the color converter script
     subprocess.run([sys.executable, r"microservices\color_name_hexadecimal_converter\converter.py"])
 
-    time.sleep(5)
+    time.sleep(2)
 
     color_hex = None
 
@@ -306,6 +317,57 @@ def update_ui_color(new_color):
     #update the button colors
     for button in dict_of_buttons.values():
         button.configure(fg = color_hex)
+
+def save_params(name= "temp.txt"):
+    """method to save current synth parameters as a dictionary. Calls the save_text_file microservice """
+
+    service_file = r"microservices/save_text_file/Text Files/file-service.txt"
+    dict_of_params = {}
+    #get the active oscillator
+    dict_of_params["active_osc"] = get_active_osc()
+
+    #get the amplitude value
+    field_obj = dict_of_fields["amp_field"]
+    dict_of_params["amp"] = field_obj.get()
+
+    #get the frequency value
+    field_obj = dict_of_fields["freq_field"]
+    dict_of_params["freq"] = field_obj.get()
+
+    #get the duration value
+    field_obj = dict_of_fields["dur_field"]
+    dict_of_params["dur"] = field_obj.get()
+
+    action = "w"
+
+    with open(service_file,"w") as f:
+        f.write(action + "\n" + name + "\n" + str(dict_of_params))
+
+    microservice_file = r"microservices/save_text_file/save_text_file.py"
+
+    subprocess.run([sys.executable, microservice_file])
+
+def load_file(name):
+    """Use the save_text_file microservice to load synth params"""
+    service_file = r"microservices/save_text_file/Text Files/file-service.txt"
+    action = "r"
+
+    #write the action and file name to the service file
+    with open(service_file,"w") as f:
+        f.write(action + "\n" + name)
+
+    #wait for the microservice to take action
+    time.sleep(3)
+
+    #get the read content from the service file
+    content = None
+    with open(service_file,"r") as f:
+        content = f.read()
+
+    print(content)
+
+
+
 
 def create_ui():
     #Establish the main synth window
@@ -655,8 +717,7 @@ def create_ui():
     dict_of_tooltips["reset_frame"] = ToolTip(reset_frame, msg="Click here to reset synthesizer to default settings."
                                                                "Warning! Resetting cannot be undone!", delay=2)
 
-
-    #creat the color selection drop down
+    #create the color selection drop down
     color_dropdown = ttk.Combobox(main_window, values = colors)
     color_dropdown.set("Select Color")
     color_dropdown.grid(row= color_selection_coords[1], column = color_selection_coords[0])
@@ -673,6 +734,74 @@ def create_ui():
 
     #add the label to the dict of labels
     dict_of_labels["color_select"] = color_select_label
+
+
+    #create the field for entering a name to save a file as
+    save_name_field = tk.Entry(main_window, width=20, justify="center", name="save_name_field",
+                         font=("inter", 10, "bold"))
+    save_name_field.grid(row=save_name_field_coords[1], column = save_name_field_coords[0], sticky="n")
+    save_name_field.insert(0, "")
+
+    #add the field to the fields dictionary
+    dict_of_fields["save_name_field"] = save_name_field
+
+    #create the label for the save name field
+    save_name_label = tk.Label(main_window, text="Save File Name", bg="#333333", fg=ui_color,
+                               font=("inter", 12, "bold"), name="save_name_label")
+    save_name_label.grid(row = save_name_label_coords[1], column = save_name_label_coords[0], sticky="n")
+
+    #add the label to the dict of labels
+    dict_of_labels["save_name"] = save_name_label
+
+    #create the field for entering a file name to load
+    load_file_field = tk.Entry(main_window, width=20, justify="center", name="load_file_field",
+                               font=("inter", 10, "bold"))
+    load_file_field.grid(row=load_file_field_coords[1], column = load_file_field_coords[0], sticky="s")
+
+    #create the save file button frame
+    save_frame = tk.Frame(main_window, borderwidth=2, bg=ui_color, name="save_frame")
+    save_frame.grid(row=save_file_button_coords[1], column=save_file_button_coords[0])
+
+    #add the frame to the dict of frames
+    dict_of_frames["save_frame"] = save_frame
+
+    save_function = lambda :save_params(save_name_field.get())
+
+    #create the save button widget
+    save_button = tk.Button(save_frame, text= "Save", font= ("inter", 12, "bold"),
+                            fg=ui_color, bg="#333333", relief="flat", name="save_button",
+                            activebackground= "#333333", activeforeground=ui_color,
+                            command=save_function)
+    save_button.grid(row=save_file_button_coords[1], column=save_file_button_coords[0])
+
+    #add the button to the dict of buttons
+    dict_of_buttons["save_button"] = save_button
+
+    load_function = lambda :load_file(load_file_field.get())
+
+    #create the label for the file name to load
+    load_file_label = tk.Label(main_window, text="Load File Name", bg="#333333", fg=ui_color,
+                               font=("inter", 12, "bold"), name="load_file_name_label")
+    load_file_label.grid(row = load_file_label_coords[1], column = load_file_label_coords[0], sticky="n")
+
+    #add the label to the dictionary
+    dict_of_labels["load_file_name"] = load_file_label
+
+    #creat the load files frame and button
+    load_frame = tk.Frame(main_window, borderwidth=2, bg=ui_color, name="load_frame")
+    load_frame.grid(row=load_file_button_coords[1], column=load_file_button_coords[0])
+
+    #add the frame to the dict of frames
+    dict_of_frames["load_frame"] = load_frame
+
+    load_button = tk.Button(load_frame, text= "Load", font= ("inter", 12, "bold"),
+                            fg=ui_color, bg="#333333", relief="flat", name="load_button",
+                            activebackground= "#333333", activeforeground=ui_color,
+                            command=load_function)
+    load_button.grid(row=load_file_button_coords[1], column=load_file_button_coords[0])
+
+    #add the button to the dict of buttons
+    dict_of_buttons["load_button"] = load_button
 
     return main_window
 
