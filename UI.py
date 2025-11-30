@@ -29,17 +29,20 @@ square_button_coords=[2,15]
 sawtooth_text_label_coords=[3,14]
 sawtooth_button_coords=[3,15]
 
-key_text_box_coords = [0,18]
-key_label_coords = [0,19]
+key_text_box_coords = [0,19]
+key_label_coords = [0,20]
 
-freq_text_box_coords =[1,18]
-freq_label_coords = [1,19]
+freq_text_box_coords =[1,19]
+freq_label_coords = [1,20]
+freq_word_field_coords =[1,17]
 
-duration_text_box_coords = [2,18]
-duration_label_coords = [2,19]
+duration_text_box_coords = [2,19]
+duration_label_coords = [2,20]
+duration_word_field_coords = [2,17]
 
-amp_text_box_coords = [3,18]
-amp_label_coords = [3,19]
+amp_text_box_coords = [3,19]
+amp_label_coords = [3,20]
+amp_word_field_coords = [3,17]
 
 tkm_button_coords =[0,21]
 tkm_label_coords =[0,22]
@@ -87,6 +90,15 @@ colors = ["default", "red", "orange", "yellow", "green", "cyan", "blue", "magent
           "lilac", "pink", "white", "black", "gray", "silver", "maroon","brown", "beige", "tan", "peach",
           "lime", "olive", "turquoise", "teal", "navy", "indigo", "violet", "chartreuse"]
 
+def readTxtFile(file_path):
+    """Returns the text from the file at file_path"""
+    try:
+        with open(file_path, "r") as f:
+            text = f.read().strip()
+            return text
+    except FileNotFoundError:
+        text = ""
+        return text
 
 def amplitude_enter_function(event = None):
     """Happens when the return key is pressed after a new amplitude has been entered."""
@@ -104,6 +116,24 @@ def amplitude_enter_function(event = None):
     field_obj.delete(0, tk.END)
     field_obj.insert(0, str(amp_val))
 
+    field_obj = dict_of_fields["amp_text_field"]
+    service_file = r"microservices/nums_to_words/convertnumber.txt"
+
+    with open(service_file,"w") as f:
+        f.write(str(amp_val))
+
+    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+
+    subprocess.run([sys.executable, microservice_file])
+
+    time.sleep(2)
+
+    with open(service_file,"r") as f:
+        content = f.read()
+
+    field_obj.delete(0, tk.END)
+    field_obj.insert(0, str(content))
+    open(service_file, "w").close()
     field_obj.master.focus_set()
 
 def key_enter_function(event = None):
@@ -161,6 +191,33 @@ def frequency_enter_function(event = None):
         key_field.delete(0,tk.END)
         key_field.insert(0,"N/a")
 
+
+    field_obj.master.focus_set()
+
+    update_frequency_text()
+
+def update_frequency_text():
+
+    freq_val = dict_of_fields["freq_field"].get()
+    field_obj = dict_of_fields["freq_text_field"]
+    service_file = r"microservices/nums_to_words/convertnumber.txt"
+
+    with open(service_file,"w") as f:
+        f.write(str(freq_val))
+
+    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+
+    subprocess.run([sys.executable, microservice_file])
+
+    time.sleep(2)
+
+    with open(service_file,"r") as f:
+        content = f.read()
+
+    field_obj.delete(0, tk.END)
+    field_obj.insert(0, str(content))
+    open(service_file, "w").close()
+
     field_obj.master.focus_set()
 
 def duration_enter_function(event = None):
@@ -181,6 +238,26 @@ def duration_enter_function(event = None):
     else:
         field_obj.delete(0,tk.END)
         field_obj.insert(0,str(dur_val))
+
+
+    field_obj = dict_of_fields["dur_text_field"]
+    service_file = r"microservices/nums_to_words/convertnumber.txt"
+
+    with open(service_file,"w") as f:
+        f.write(str(dur_val))
+
+    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+
+    subprocess.run([sys.executable, microservice_file])
+
+    time.sleep(2)
+
+    with open(service_file,"r") as f:
+        content = f.read()
+
+    field_obj.delete(0, tk.END)
+    field_obj.insert(0, str(content))
+    open(service_file, "w").close()
 
     field_obj.master.focus_set()
 
@@ -521,6 +598,14 @@ def create_ui():
 
     dict_of_fields["freq_field"] = freq_field
 
+    #create the field that displays the word conversion of frequency
+    freq_text_field = tk.Entry(main_window, width=25, justify="center",font=("inter", 10, "bold"),
+                               name="freq_text_field")
+    freq_text_field.grid(row= freq_word_field_coords[1], column=freq_word_field_coords[0], sticky="n", pady=(0,2))
+    freq_text_field.insert(0, "Two Hundred Sixty One")
+
+    dict_of_fields["freq_text_field"] = freq_text_field
+
     #create label for frequency text entry
     frequency_field_label = tk.Label(main_window, text = "Frequency\n(Hz)", bg="#333333",fg=ui_color,
                                      font=("inter", 12, "bold"), name="freq_field_label")
@@ -554,6 +639,15 @@ def create_ui():
 
     dict_of_fields["amp_field"] = amp_field
 
+    #create the field that displays the amplitude as a word
+    amp_text_field = tk.Entry(main_window, width=15, justify="center", name="amp_text_field",
+                              font=("inter", 10, "bold"))
+    amp_text_field.grid(row =amp_word_field_coords[1], column = amp_word_field_coords[0], sticky="n")
+    amp_text_field.insert(0, "One hundred")
+
+    dict_of_fields["amp_text_field"] = amp_text_field
+
+
     #create the tool tips for the amplitude widgets
     dict_of_tooltips["amp_field_tt"] = ToolTip(amp_field, msg="Enter a amplitude value here (0 - 100). Type a new value "
                                                               "and then use the return key. A value of "
@@ -578,6 +672,13 @@ def create_ui():
     dur_field.bind("<Return>", lambda event: duration_enter_function(event))
 
     dict_of_fields["dur_field"] = dur_field
+
+    # create the duration word field
+    dur_text_field = tk.Entry(main_window, width=8, justify="center", name="dur_text_field",
+                              font=("inter", 10, "bold"))
+    dur_text_field.grid(row = duration_word_field_coords[1], column = duration_word_field_coords[0], sticky="n")
+    dur_text_field.insert(0, "Two")
+    dict_of_fields["dur_text_field"] = dur_text_field
 
     #create the tool tips for the duration widgets
     dict_of_tooltips["dur_field_tt"] = ToolTip(dur_field, msg="Enter a duration value here (1 - 10 seconds). Values "
@@ -839,7 +940,7 @@ def create_ui():
     save_name_field = tk.Entry(main_window, width=20, justify="center", name="save_name_field",
                          font=("inter", 10, "bold"))
     save_name_field.grid(row=save_name_field_coords[1], column = save_name_field_coords[0], sticky="n")
-    save_name_field.insert(0, "")
+    save_name_field.insert(0, "Enter Save Name")
 
     #add the field to the fields dictionary
     dict_of_fields["save_name_field"] = save_name_field
@@ -900,6 +1001,8 @@ def create_ui():
 
     #add the button to the dict of buttons
     dict_of_buttons["load_button"] = load_button
+
+    #create the num converter field
 
     return main_window
 
