@@ -13,6 +13,8 @@ from sound_methods.ready_sound import ready_sound
 import re
 import time
 import subprocess
+import glob
+import ast
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
 sine_text_label_coords=[0,14]
@@ -347,24 +349,121 @@ def save_params(name= "temp.txt"):
 
     subprocess.run([sys.executable, microservice_file])
 
-def load_file(name):
+def get_preset_names():
+    """method for getting the name of the presets in the sounds/presets directory"""
+
+    presets_path = r"sounds/presets/"
+
+    presets = glob.glob(presets_path + "*.txt")
+
+    clean_presets = []
+    #cleanse the presets
+    for preset in presets:
+        name = os.path.basename(preset)
+        name = name.replace(".txt", "")
+        clean_presets.append(name)
+
+
+    return clean_presets
+
+def load_file(name, root):
     """Use the save_text_file microservice to load synth params"""
     service_file = r"microservices/save_text_file/Text Files/file-service.txt"
     action = "r"
+
+    open(service_file,"w").close()
+
+    #append the name with the correct path parameters
+    name = "sounds/presets/" + name + ".txt"
 
     #write the action and file name to the service file
     with open(service_file,"w") as f:
         f.write(action + "\n" + name)
 
+    microservice_file = r"microservices/save_text_file/save_text_file.py"
+
+    subprocess.run([sys.executable, microservice_file])
+
     #wait for the microservice to take action
-    time.sleep(3)
+    time.sleep(7)
 
     #get the read content from the service file
     content = None
     with open(service_file,"r") as f:
         content = f.read()
+    open(service_file, "w").close()
 
-    print(content)
+    print(type(content))
+
+    #change the content from a string to a dict
+    dir_content = ast.literal_eval(content)
+
+    new_synth = dir_content["active_osc"]
+    new_dur = dir_content["dur"]
+    new_freq = dir_content["freq"]
+    new_amp = dir_content["amp"]
+
+    active_osc = get_active_osc()
+
+    #update the oscillator if necessary
+    if new_synth != active_osc:
+        if new_synth == "sine":
+            update_toggle_state(root, dict_of_oscillator_buttons["sine_wave_button_group"]["button"],
+                                dict_of_oscillator_buttons["sine_wave_button_group"]["state"])
+            state = dict_of_oscillator_buttons["sine_wave_button_group"]["state"]
+            state.set(True)
+            update_toggle_color(dict_of_oscillator_buttons["sine_wave_button_group"]["button"],
+                                dict_of_oscillator_buttons["sine_wave_button_group"]["state"])
+        if new_synth == "triangle":
+            update_toggle_state(root, dict_of_oscillator_buttons["triangle_button_group"]["button"],
+                                dict_of_oscillator_buttons["triangle_button_group"]["state"])
+            state = dict_of_oscillator_buttons["triangle_button_group"]["state"]
+            state.set(True)
+            update_toggle_color(dict_of_oscillator_buttons["triangle_button_group"]["button"],
+                                dict_of_oscillator_buttons["triangle_button_group"]["state"])
+
+        if new_synth == "square":
+            update_toggle_state(root, dict_of_oscillator_buttons["square_button_group"]["button"],
+                                dict_of_oscillator_buttons["square_button_group"]["state"])
+            state = dict_of_oscillator_buttons["square_button_group"]["state"]
+            state.set(True)
+            update_toggle_color(dict_of_oscillator_buttons["square_button_group"]["button"],
+                                dict_of_oscillator_buttons["square_button_group"]["state"])
+        if new_synth == "saw":
+            update_toggle_state(root, dict_of_oscillator_buttons["sawtooth_button_group"]["button"],
+                                dict_of_oscillator_buttons["sawtooth_button_group"]["state"])
+            state = dict_of_oscillator_buttons["sawtooth_button_group"]["state"]
+            state.set(True)
+            update_toggle_color(dict_of_oscillator_buttons["sawtooth_button_group"]["button"],
+                                dict_of_oscillator_buttons["sawtooth_button_group"]["state"])
+
+    #update the amplitude
+    cur_amp = dict_of_fields["amp_field"].get()
+    if cur_amp != new_amp:
+        field_obj = dict_of_fields["amp_field"]
+        field_obj.delete(0, tk.END)
+        field_obj.insert(0, new_amp)
+
+    #update the duration
+    cur_dur = dict_of_fields["dur_field"].get()
+    if cur_dur != new_dur:
+        field_obj = dict_of_fields["dur_field"]
+        field_obj.delete(0, tk.END)
+        field_obj.insert(0, new_dur)
+
+    field_obj = dict_of_fields["freq_field"]
+    #update the frequency
+    cur_freq = dict_of_fields["freq_field"].get()
+    if cur_freq != new_freq:
+        field_obj.delete(0, tk.END)
+        field_obj.insert(0, new_freq)
+
+    field_obj.master.focus_set()
+
+    frequency_enter_function(None)
+
+    ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(),
+                dict_of_fields["dur_field"].get())
 
 
 
@@ -753,10 +852,9 @@ def create_ui():
     #add the label to the dict of labels
     dict_of_labels["save_name"] = save_name_label
 
-    #create the field for entering a file name to load
-    load_file_field = tk.Entry(main_window, width=20, justify="center", name="load_file_field",
-                               font=("inter", 10, "bold"))
-    load_file_field.grid(row=load_file_field_coords[1], column = load_file_field_coords[0], sticky="s")
+    load_dropdown = ttk.Combobox(main_window, values = get_preset_names())
+    load_dropdown.set("Select Preset")
+    load_dropdown.grid(row= load_file_field_coords[1], column = load_file_field_coords[0], sticky="s")
 
     #create the save file button frame
     save_frame = tk.Frame(main_window, borderwidth=2, bg=ui_color, name="save_frame")
@@ -777,7 +875,7 @@ def create_ui():
     #add the button to the dict of buttons
     dict_of_buttons["save_button"] = save_button
 
-    load_function = lambda :load_file(load_file_field.get())
+    load_function = lambda :load_file(load_dropdown.get(), main_window)
 
     #create the label for the file name to load
     load_file_label = tk.Label(main_window, text="Load File Name", bg="#333333", fg=ui_color,

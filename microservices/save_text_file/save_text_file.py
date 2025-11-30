@@ -18,7 +18,7 @@ def cleanse_content(content):
 
 def read_action(file_name):
     """Takes a file name and returns the content of the file"""
-    service_file = "./Text Files/file-service.txt"
+    service_file = r"microservices/save_text_file/Text Files/file-service.txt"
     content = None
 
     try:
@@ -96,8 +96,8 @@ def parse_action_name(content):
 
 
 def main():
-    service_file = "Text Files/file-service.txt"
-
+    service_file = r"microservices/save_text_file/Text Files/file-service.txt"
+    print(os.curdir)
     last_content = ""
     # loop for waiting for the service file to update
     while True:
@@ -109,6 +109,8 @@ def main():
             action, name = parse_action_name(content)
             open(service_file, "w").close()
 
+            # name = "sounds/presets/" + name
+
             # if the action is "r", check if the file exists, then open it and copy the contents into the passed in file.
             if action == "r":
                 read_action(name)
@@ -119,6 +121,7 @@ def main():
                 append_action(name, content[2])
                 return
             else:
+                name = "sounds/presets/" + name
                 write_action(name, content[2])
                 return
 
