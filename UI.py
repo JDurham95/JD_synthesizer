@@ -70,6 +70,8 @@ load_file_label_coords = [23,20]
 
 load_file_button_coords = [23,21]
 
+presets_message_label_coords = [23,23]
+
 
 dict_of_tooltips = {}
 dict_of_oscillator_buttons= {}
@@ -82,6 +84,7 @@ dict_of_settings_buttons= {}
 dict_of_labels = {}
 dict_of_frames = {}
 dict_of_buttons = {}
+dict_of_message = {}
 
 ui_color = "#1539EE"
 default_color = "#1539EE"
@@ -89,6 +92,45 @@ default_color = "#1539EE"
 colors = ["default", "red", "orange", "yellow", "green", "cyan", "blue", "magenta","purple", "lavender",
           "lilac", "pink", "white", "black", "gray", "silver", "maroon","brown", "beige", "tan", "peach",
           "lime", "olive", "turquoise", "teal", "navy", "indigo", "violet", "chartreuse"]
+
+def get_num_presets():
+    "returns the number of presets"
+
+    path = r"sounds/presets/"
+
+    presets = glob.glob(path + "*.txt")
+
+    return len(presets)
+
+def get_message_and_color():
+    num = get_num_presets()
+
+    service_file = r"microservices\num_presets_message\file-service.txt"
+    microservice_file = r"microservices\num_presets_message\nums_presets_message.py"
+
+    with open(service_file, 'w') as f:
+        f.write(str(num))
+
+    subprocess.run([sys.executable, microservice_file])
+
+    time.sleep(2)
+    content = None
+    with open(service_file, 'r') as f:
+        content = f.readlines()
+    open(service_file, 'w').close()
+
+    return content[0], content[1]
+
+
+def update_message(event = None):
+
+    message, color = get_message_and_color()
+
+    field_obj = dict_of_message["preset_message"]
+
+    field_obj.config(text=message)
+    field_obj.config(fg=color)
+
 
 def readTxtFile(file_path):
     """Returns the text from the file at file_path"""
@@ -116,6 +158,11 @@ def amplitude_enter_function(event = None):
     field_obj.delete(0, tk.END)
     field_obj.insert(0, str(amp_val))
 
+    field_obj.master.focus_set()
+
+def update_amplitude_text(event = None):
+
+    amp_val = dict_of_fields["amp_field"].get()
     field_obj = dict_of_fields["amp_text_field"]
     service_file = r"microservices/nums_to_words/convertnumber.txt"
 
@@ -239,7 +286,12 @@ def duration_enter_function(event = None):
         field_obj.delete(0,tk.END)
         field_obj.insert(0,str(dur_val))
 
+    field_obj.master.focus_set()
+    update_duration_text()
 
+def update_duration_text(event = None):
+
+    dur_val = dict_of_fields["dur_field"].get()
     field_obj = dict_of_fields["dur_text_field"]
     service_file = r"microservices/nums_to_words/convertnumber.txt"
 
@@ -260,7 +312,6 @@ def duration_enter_function(event = None):
     open(service_file, "w").close()
 
     field_obj.master.focus_set()
-
 
 def get_active_osc():
     """Returns the oscillator that is currently active"""
@@ -426,6 +477,8 @@ def save_params(name= "temp.txt"):
 
     subprocess.run([sys.executable, microservice_file])
 
+    update_message()
+
 def get_preset_names():
     """method for getting the name of the presets in the sounds/presets directory"""
 
@@ -542,6 +595,9 @@ def load_file(name, root):
     ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(),
                 dict_of_fields["dur_field"].get())
 
+    update_duration_text()
+    update_amplitude_text()
+    update_frequency_text()
 
 
 
@@ -1002,7 +1058,16 @@ def create_ui():
     #add the button to the dict of buttons
     dict_of_buttons["load_button"] = load_button
 
-    #create the num converter field
+    #the label for the custom message based on the number of presets
+    message, color = get_message_and_color()
+    preset_message = tk.Label(main_window, text = message, bg="#333333", fg=color, font=("inter", 10, "bold"),
+                              name = "preset_message_label", wraplength=150, justify="center")
+    preset_message.grid(row = presets_message_label_coords[1], column = presets_message_label_coords[0])
+
+    dict_of_message["preset_message"] = preset_message
+
+
+
 
     return main_window
 
