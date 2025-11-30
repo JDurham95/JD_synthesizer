@@ -1,11 +1,8 @@
 import os
 import sys
 import tkinter as tk
-from tkinter import OptionMenu, StringVar
 from tkinter import ttk
-# from TkToolTip import ToolTip
 from tktooltip import ToolTip
-from sound_methods.ready_sound import ready_sound
 from sound_methods.key_to_freq import key_to_freq
 from sound_methods.freq_to_key import freq_to_key
 from sound_methods.play_sound import play_sound
@@ -159,6 +156,7 @@ def amplitude_enter_function(event = None):
     field_obj.insert(0, str(amp_val))
 
     field_obj.master.focus_set()
+    update_amplitude_text()
 
 def update_amplitude_text(event = None):
 
@@ -408,6 +406,10 @@ def reset(root,event =None):
 
     ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(),
                 dict_of_fields["dur_field"].get())
+
+    update_amplitude_text()
+    update_duration_text()
+    update_frequency_text()
 
 
 def update_ui_color(new_color):
