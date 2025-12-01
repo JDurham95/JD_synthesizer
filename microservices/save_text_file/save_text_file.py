@@ -105,7 +105,6 @@ def main():
         content = get_content(service_file)
 
         if content and content != last_content:
-            time.sleep(5)
             action, name = parse_action_name(content)
             open(service_file, "w").close()
 

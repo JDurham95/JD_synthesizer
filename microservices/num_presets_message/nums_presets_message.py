@@ -52,9 +52,9 @@ def main():
 
             message, color = get_message(content)
 
-        with open(service_file, 'w') as f:
-            f.write(message + "\n" + color)
-            return
+            with open(service_file, 'w') as f:
+                f.write(message + "\n" + color)
+                return
 
         time.sleep(1)
 

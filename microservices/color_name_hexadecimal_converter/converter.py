@@ -72,6 +72,7 @@ def main():
 
     #path for the service file
     service_file = r"microservices\color_name_hexadecimal_converter\service-file.txt"
+    # service_file = r"service-file.txt"
 
     #create the service file if it does not exist
     if not os.path.exists(service_file):

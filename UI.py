@@ -12,6 +12,7 @@ import time
 import subprocess
 import glob
 import ast
+import sys
 
 #coordinates for tkinter elements on 24x24 grid. list element 0 is column, list element 1 is row
 sine_text_label_coords=[0,14]
@@ -478,6 +479,7 @@ def save_params(name= "temp.txt"):
     microservice_file = r"microservices/save_text_file/save_text_file.py"
 
     subprocess.run([sys.executable, microservice_file])
+    time.sleep(5)
 
     update_message()
 
