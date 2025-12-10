@@ -74,7 +74,7 @@ The synthesizer may be reset to default settings by using the reset button.
 The color of certain UI elements may be changed using the select color dropdown. This feature uses a microservice that 
 communicates via text files so it may take up to 7 seconds for the color change to take effect. 
 
-![color_dropdown.png](images/color_dropdown.png
+![color_dropdown.png](images/color_dropdown.png)
 
 ### Saving a Preset 
 
