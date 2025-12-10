@@ -157,30 +157,30 @@ def amplitude_enter_function(event = None):
     field_obj.insert(0, str(amp_val))
 
     field_obj.master.focus_set()
-    update_amplitude_text()
+    # update_amplitude_text()
 
-def update_amplitude_text(event = None):
-
-    amp_val = dict_of_fields["amp_field"].get()
-    field_obj = dict_of_fields["amp_text_field"]
-    service_file = r"microservices/nums_to_words/convertnumber.txt"
-
-    with open(service_file,"w") as f:
-        f.write(str(amp_val))
-
-    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
-
-    subprocess.run([sys.executable, microservice_file])
-
-    time.sleep(2)
-
-    with open(service_file,"r") as f:
-        content = f.read()
-
-    field_obj.delete(0, tk.END)
-    field_obj.insert(0, str(content))
-    open(service_file, "w").close()
-    field_obj.master.focus_set()
+# def update_amplitude_text(event = None):
+#
+#     amp_val = dict_of_fields["amp_field"].get()
+#     field_obj = dict_of_fields["amp_text_field"]
+#     service_file = r"microservices/nums_to_words/convertnumber.txt"
+#
+#     with open(service_file,"w") as f:
+#         f.write(str(amp_val))
+#
+#     microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+#
+#     subprocess.run([sys.executable, microservice_file])
+#
+#     time.sleep(2)
+#
+#     with open(service_file,"r") as f:
+#         content = f.read()
+#
+#     field_obj.delete(0, tk.END)
+#     field_obj.insert(0, str(content))
+#     open(service_file, "w").close()
+#     field_obj.master.focus_set()
 
 def key_enter_function(event = None):
     """happens when the return key is pressed after a new key has been entered. """
@@ -240,31 +240,31 @@ def frequency_enter_function(event = None):
 
     field_obj.master.focus_set()
 
-    update_frequency_text()
+    # update_frequency_text()
 
-def update_frequency_text():
-
-    freq_val = dict_of_fields["freq_field"].get()
-    field_obj = dict_of_fields["freq_text_field"]
-    service_file = r"microservices/nums_to_words/convertnumber.txt"
-
-    with open(service_file,"w") as f:
-        f.write(str(freq_val))
-
-    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
-
-    subprocess.run([sys.executable, microservice_file])
-
-    time.sleep(2)
-
-    with open(service_file,"r") as f:
-        content = f.read()
-
-    field_obj.delete(0, tk.END)
-    field_obj.insert(0, str(content))
-    open(service_file, "w").close()
-
-    field_obj.master.focus_set()
+# def update_frequency_text():
+#
+#     freq_val = dict_of_fields["freq_field"].get()
+#     field_obj = dict_of_fields["freq_text_field"]
+#     service_file = r"microservices/nums_to_words/convertnumber.txt"
+#
+#     with open(service_file,"w") as f:
+#         f.write(str(freq_val))
+#
+#     microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+#
+#     subprocess.run([sys.executable, microservice_file])
+#
+#     time.sleep(2)
+#
+#     with open(service_file,"r") as f:
+#         content = f.read()
+#
+#     field_obj.delete(0, tk.END)
+#     field_obj.insert(0, str(content))
+#     open(service_file, "w").close()
+#
+#     field_obj.master.focus_set()
 
 def duration_enter_function(event = None):
     field_obj = dict_of_fields["dur_field"]
@@ -286,31 +286,31 @@ def duration_enter_function(event = None):
         field_obj.insert(0,str(dur_val))
 
     field_obj.master.focus_set()
-    update_duration_text()
+    # update_duration_text()
 
-def update_duration_text(event = None):
-
-    dur_val = dict_of_fields["dur_field"].get()
-    field_obj = dict_of_fields["dur_text_field"]
-    service_file = r"microservices/nums_to_words/convertnumber.txt"
-
-    with open(service_file,"w") as f:
-        f.write(str(dur_val))
-
-    microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
-
-    subprocess.run([sys.executable, microservice_file])
-
-    time.sleep(2)
-
-    with open(service_file,"r") as f:
-        content = f.read()
-
-    field_obj.delete(0, tk.END)
-    field_obj.insert(0, str(content))
-    open(service_file, "w").close()
-
-    field_obj.master.focus_set()
+# def update_duration_text(event = None):
+#
+#     dur_val = dict_of_fields["dur_field"].get()
+#     field_obj = dict_of_fields["dur_text_field"]
+#     service_file = r"microservices/nums_to_words/convertnumber.txt"
+#
+#     with open(service_file,"w") as f:
+#         f.write(str(dur_val))
+#
+#     microservice_file = r"microservices/nums_to_words/Numbers-To-Words-Microservice.py"
+#
+#     subprocess.run([sys.executable, microservice_file])
+#
+#     time.sleep(2)
+#
+#     with open(service_file,"r") as f:
+#         content = f.read()
+#
+#     field_obj.delete(0, tk.END)
+#     field_obj.insert(0, str(content))
+#     open(service_file, "w").close()
+#
+#     field_obj.master.focus_set()
 
 def get_active_osc():
     """Returns the oscillator that is currently active"""
@@ -408,9 +408,9 @@ def reset(root,event =None):
     ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(),
                 dict_of_fields["dur_field"].get())
 
-    update_amplitude_text()
-    update_duration_text()
-    update_frequency_text()
+    # update_amplitude_text()
+    # update_duration_text()
+    # update_frequency_text()
 
 
 def update_ui_color(new_color):
@@ -599,9 +599,9 @@ def load_file(name, root):
     ready_sound(dict_of_fields["freq_field"].get(), dict_of_fields["amp_field"].get(),get_active_osc(),
                 dict_of_fields["dur_field"].get())
 
-    update_duration_text()
-    update_amplitude_text()
-    update_frequency_text()
+    # update_duration_text()
+    # update_amplitude_text()
+    # update_frequency_text()
 
 
 
@@ -658,13 +658,14 @@ def create_ui():
 
     dict_of_fields["freq_field"] = freq_field
 
-    #create the field that displays the word conversion of frequency
-    freq_text_field = tk.Entry(main_window, width=25, justify="center",font=("inter", 10, "bold"),
-                               name="freq_text_field")
-    freq_text_field.grid(row= freq_word_field_coords[1], column=freq_word_field_coords[0], sticky="n", pady=(0,2))
-    freq_text_field.insert(0, "Two Hundred Sixty One")
-
-    dict_of_fields["freq_text_field"] = freq_text_field
+    # #create the field that displays the word conversion of frequency (Removed due to UI Clutter, only added to
+    # # fill assignment requirements)
+    # freq_text_field = tk.Entry(main_window, width=25, justify="center",font=("inter", 10, "bold"),
+    #                            name="freq_text_field")
+    # freq_text_field.grid(row= freq_word_field_coords[1], column=freq_word_field_coords[0], sticky="n", pady=(0,2))
+    # freq_text_field.insert(0, "Two Hundred Sixty One")
+    #
+    # dict_of_fields["freq_text_field"] = freq_text_field
 
     #create label for frequency text entry
     frequency_field_label = tk.Label(main_window, text = "Frequency\n(Hz)", bg="#333333",fg=ui_color,
@@ -699,13 +700,13 @@ def create_ui():
 
     dict_of_fields["amp_field"] = amp_field
 
-    #create the field that displays the amplitude as a word
-    amp_text_field = tk.Entry(main_window, width=15, justify="center", name="amp_text_field",
-                              font=("inter", 10, "bold"))
-    amp_text_field.grid(row =amp_word_field_coords[1], column = amp_word_field_coords[0], sticky="n")
-    amp_text_field.insert(0, "One hundred")
+    # #create the field that displays the amplitude as a word(Removed due to UI Clutter, only added to fill assignment requirements)
+    # amp_text_field = tk.Entry(main_window, width=15, justify="center", name="amp_text_field",
+    #                           font=("inter", 10, "bold"))
+    # amp_text_field.grid(row =amp_word_field_coords[1], column = amp_word_field_coords[0], sticky="n")
+    # amp_text_field.insert(0, "One hundred")
 
-    dict_of_fields["amp_text_field"] = amp_text_field
+    # dict_of_fields["amp_text_field"] = amp_text_field
 
 
     #create the tool tips for the amplitude widgets
@@ -733,12 +734,12 @@ def create_ui():
 
     dict_of_fields["dur_field"] = dur_field
 
-    # create the duration word field
-    dur_text_field = tk.Entry(main_window, width=8, justify="center", name="dur_text_field",
-                              font=("inter", 10, "bold"))
-    dur_text_field.grid(row = duration_word_field_coords[1], column = duration_word_field_coords[0], sticky="n")
-    dur_text_field.insert(0, "Two")
-    dict_of_fields["dur_text_field"] = dur_text_field
+    # # create the duration word field (Removed due to UI Clutter, only added to fill assignment requirements)
+    # dur_text_field = tk.Entry(main_window, width=8, justify="center", name="dur_text_field",
+    #                           font=("inter", 10, "bold"))
+    # dur_text_field.grid(row = duration_word_field_coords[1], column = duration_word_field_coords[0], sticky="n")
+    # dur_text_field.insert(0, "Two")
+    # dict_of_fields["dur_text_field"] = dur_text_field
 
     #create the tool tips for the duration widgets
     dict_of_tooltips["dur_field_tt"] = ToolTip(dur_field, msg="Enter a duration value here (1 - 10 seconds). Values "
@@ -1062,13 +1063,14 @@ def create_ui():
     #add the button to the dict of buttons
     dict_of_buttons["load_button"] = load_button
 
-    #the label for the custom message based on the number of presets
-    message, color = get_message_and_color()
-    preset_message = tk.Label(main_window, text = message, bg="#333333", fg=color, font=("inter", 10, "bold"),
-                              name = "preset_message_label", wraplength=150, justify="center")
-    preset_message.grid(row = presets_message_label_coords[1], column = presets_message_label_coords[0])
-
-    dict_of_message["preset_message"] = preset_message
+    #the label for the custom message based on the number of presets (Commented out because it was cluttering up the UI,
+    #I only had it because it was necessary for the class assignment requirements)
+    # message, color = get_message_and_color()
+    # preset_message = tk.Label(main_window, text = message, bg="#333333", fg=color, font=("inter", 10, "bold"),
+    #                           name = "preset_message_label", wraplength=150, justify="center")
+    # preset_message.grid(row = presets_message_label_coords[1], column = presets_message_label_coords[0])
+    #
+    # dict_of_message["preset_message"] = preset_message
 
 
 
