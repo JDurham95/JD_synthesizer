@@ -1,4 +1,4 @@
-# JDSynth Monophonic Synthesizer 
+# JDSynth Tone Generator
 
 ## Description
 ![main_ui.png](images/main_ui.png)
@@ -64,7 +64,7 @@ When the user is ready to play a sound, they use the play button to play a sound
 
 ### Resetting 
 
-The synthesizer may be reset to default settings by using the reset button. 
+The tone generator may be reset to default settings by using the reset button. 
 
 ![reset.png](images/reset.png)
 
@@ -78,7 +78,7 @@ communicates via text files so it may take up to 7 seconds for the color change 
 
 ### Saving a Preset 
 
-The user may save current synthesizer settings as a preset.  The user should enter a name for the preset in the Enter
+The user may save current generator settings as a preset.  The user should enter a name for the preset in the Enter
 Save Name field and then click the save button.  Presets are saved in the sounds/presets directory. The save feature 
 uses a microservice which communicates via text files so it may take up to 7 seconds to run. 
 
